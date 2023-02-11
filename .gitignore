@@ -1,2 +1,4 @@
 /target
-Cargo.lock
+
+sim_energy.csv
+sim.bin
