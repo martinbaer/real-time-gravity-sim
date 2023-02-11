@@ -1,10 +1,10 @@
 {
-	"num_bodies": 1000,
-	"num_steps": 1000,
-	"write_interval": 100,
-	"delta_t": 0.01,
+	"num_bodies": 10,
+	"num_steps": 500,
+	"write_interval": 1,
+	"delta_t": 0.1,
 	"softening": 0.1,
 	"gravity": 1.0,
-	"log_energy_conservation": false,
-	"theta": 0.5
+	"log_energy_conservation": true,
+	"theta": 0.9
 }

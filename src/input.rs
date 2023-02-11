@@ -2,6 +2,8 @@
 
 use std::fs;
 use rand::Rng;
+use crate::physics::Vec2D;
+
 use super::physics;
 
 use serde::Deserialize;
@@ -52,23 +54,16 @@ pub fn parse_input(filename: &str) -> Result<Constants, String> {
 }
 
 // Adds random points to the given mutable reference to a vector of points
-pub fn initialize_bodies(positions: &mut Vec<physics::Point>, velocities: &mut Vec<physics::Point>, num_bodies: usize) {
-	// Allocate space for the vectors
-	positions.reserve(num_bodies as usize);
-	velocities.reserve(num_bodies as usize);
+pub fn initialize_bodies(positions: &mut Vec2D, velocities: &mut Vec2D, num_bodies: usize) {
 	// Generate random positions in a uniform distribution from -RANDOM_GENERATOR_BOX_SIZE/2 to RANDOM_GENERATOR_BOX_SIZE/2
 	let mut rng = rand::thread_rng();
-	for _ in 0..num_bodies {
-		positions.push(physics::Point {
-			x: rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE - RANDOM_GENERATOR_BOX_SIZE / 2.0,
-			y: rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE - RANDOM_GENERATOR_BOX_SIZE / 2.0,
-		});
+	for i in 0..num_bodies {
+		positions.x[i] = rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE - RANDOM_GENERATOR_BOX_SIZE / 2.0;
+		positions.y[i] = rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE - RANDOM_GENERATOR_BOX_SIZE / 2.0;
 	}
 	// Generate random velocities in a uniform distribution from -RANDOM_GENERATOR_BOX_SIZE/RANDOM_GENERATOR_START_TEMP to RANDOM_GENERATOR_BOX_SIZE/RANDOM_GENERATOR_START_TEMP
-	for _ in 0..num_bodies {
-		velocities.push(physics::Point {
-			x: rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE / RANDOM_GENERATOR_START_TEMP - RANDOM_GENERATOR_BOX_SIZE / (2.0 * RANDOM_GENERATOR_START_TEMP),
-			y: rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE / RANDOM_GENERATOR_START_TEMP - RANDOM_GENERATOR_BOX_SIZE / (2.0 * RANDOM_GENERATOR_START_TEMP),
-		});
-	}
+	// for i in 0..num_bodies {
+	// 	rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE / RANDOM_GENERATOR_START_TEMP - RANDOM_GENERATOR_BOX_SIZE / (2.0 * RANDOM_GENERATOR_START_TEMP);
+	// 	rng.gen::<f64>() * RANDOM_GENERATOR_BOX_SIZE / RANDOM_GENERATOR_START_TEMP - RANDOM_GENERATOR_BOX_SIZE / (2.0 * RANDOM_GENERATOR_START_TEMP);
+	// }
 }
