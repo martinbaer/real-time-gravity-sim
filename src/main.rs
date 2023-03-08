@@ -16,24 +16,29 @@ fn main() {
     devtime.start();
     // Check arguments
     let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
+    if args.len() < 1 {
         println!(
             "Usage: {} <simulation name>\nRequired files: <simulation name>.json",
             args[0]
         );
         return;
     }
-    // Parse the input file into an input struct
-    let constants: input::Constants = match input::parse_input((args[1].clone() + ".json").as_str())
-    {
-        Ok(input) => input,
-        Err(err) => {
-            println!("Error parsing input file: {}", err);
-            return;
-        }
+    // sim name: "sim" unless specified by user
+    let sim_name: String = match args.len() {
+        1 => String::from("sim"),
+        _ => args[1].clone(),
     };
+    // Parse the input file into an input struct
+    let constants: input::Constants =
+        match input::parse_input((sim_name.clone() + ".json").as_str()) {
+            Ok(input) => input,
+            Err(err) => {
+                println!("Error parsing input file: {}", err);
+                return;
+            }
+        };
     // Open the position log file
-    let mut position_log: File = match File::create(args[1].clone() + ".bin") {
+    let mut position_log: File = match File::create(sim_name.clone() + ".bin") {
         Ok(file) => file,
         Err(err) => {
             println!("Error creating position log file: {}", err);
@@ -41,7 +46,7 @@ fn main() {
         }
     };
     // Open the energy log file
-    let mut energy_log: File = match File::create(args[1].clone() + "_energy.csv") {
+    let mut energy_log: File = match File::create(sim_name.clone() + "_energy.csv") {
         Ok(file) => file,
         Err(err) => {
             println!("Error creating energy log file: {}", err);
@@ -64,6 +69,11 @@ fn main() {
         // Log the positions
         if step % constants.write_interval == 0 {
             log_positions(&positions, &constants, &mut position_log);
+        }
+        // TEMP: print out the positions
+        println!("Step: {}", step);
+        for i in 0..constants.num_bodies {
+            println!("{}: ({}, {})", i, positions.x[i], positions.y[i]);
         }
         // Step forward in time
         physics::step(
