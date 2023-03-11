@@ -209,7 +209,7 @@ fn get_child(tree: &mut Tree, body: &InsertBody, parent_desc: &NodeDesc) -> Node
 }
 
 // Insert a body into the Barnes-Hut tree
-fn insert(tree: &mut Tree, body: InsertBody, node_desc: NodeDesc) {
+fn insert(tree: &mut Tree, body: InsertBody, node_desc: &NodeDesc) {
     // Get the x and y coordinates of the body
     let (body_x, body_y): (f64, f64) = match body {
         InsertBody::New { point_x, point_y } => (point_x, point_y),
@@ -238,7 +238,7 @@ fn insert(tree: &mut Tree, body: InsertBody, node_desc: NodeDesc) {
                 tree_index: node_desc.index,
             };
             let child_desc: NodeDesc = get_child(tree, &quadrant_as_body, &node_desc);
-            insert(tree, quadrant_as_body, child_desc);
+            insert(tree, quadrant_as_body, &child_desc);
             // Re-try adding new particle to the tree
             insert(tree, body, node_desc);
         }
@@ -258,14 +258,14 @@ fn insert(tree: &mut Tree, body: InsertBody, node_desc: NodeDesc) {
         // Add the particle to the appropriate child
         let child_desc: NodeDesc = get_child(tree, &body, &node_desc);
         // println!("Inserting into child node {}", child_desc.index);
-        insert(tree, body, child_desc);
+        insert(tree, body, &child_desc);
     }
 }
 
 // Construct the Barnes-Hut tree by adding all the bodies to the tree
 pub fn construct_tree(tree: &mut Tree, bodies: &Vec2D, constants: &Constants) {
     // Initialize the root node
-    // zero_node(tree, ROOT_NODE_INDEX);
+    zero_node(tree, ROOT_NODE_INDEX);
     // Calculate the half width of the root node
     let mut min: Point = Point::new(f64::MAX, f64::MAX);
     let mut max: Point = Point::new(f64::MIN, f64::MIN);
@@ -297,8 +297,6 @@ pub fn construct_tree(tree: &mut Tree, bodies: &Vec2D, constants: &Constants) {
         centre_y: 0.0,
         half_width,
     };
-    // print first element in bodies.x
-    println!("bodies.x[0] = {}", bodies.x[0]);
 
     for i in 0..constants.num_bodies {
         insert(
@@ -307,7 +305,7 @@ pub fn construct_tree(tree: &mut Tree, bodies: &Vec2D, constants: &Constants) {
                 point_x: bodies.x[i],
                 point_y: bodies.y[i],
             },
-            root_node_desc.clone(),
+            &root_node_desc,
         );
     }
 }
