@@ -1,5 +1,7 @@
+cli_version/target
+cli_version/Cargo.lock
+cli_version/sim_energy.csv
+cli_version/sim.bin
+.vscode
 target
 Cargo.lock
-sim_energy.csv
-sim.bin
-.vscode
