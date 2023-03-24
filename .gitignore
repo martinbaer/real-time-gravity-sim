@@ -5,3 +5,6 @@ cli_version/sim.bin
 .vscode
 target
 Cargo.lock
+
+localhost-key.pem
+localhost.pem
