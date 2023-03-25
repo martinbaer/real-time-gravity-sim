@@ -6,7 +6,7 @@ It is currently a work-in-progress.
 
 ## Build dependencies
 
-* Rust compiler: cargo
+* Rust
 	* Unix-based:<br>
 	```curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh```
 	* MacOS:<br>
