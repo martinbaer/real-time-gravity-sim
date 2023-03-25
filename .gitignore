@@ -8,3 +8,6 @@ Cargo.lock
 
 localhost-key.pem
 localhost.pem
+
+web
+git.sh

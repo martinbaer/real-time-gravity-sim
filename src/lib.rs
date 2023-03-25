@@ -1,44 +1,106 @@
-use std::f64;
+use rand::Rng;
+use std::sync::Mutex;
 use wasm_bindgen::prelude::*;
+#[macro_use]
+extern crate lazy_static;
+//Global variable
+lazy_static! {
+    static ref PARTICLES: Mutex<Particles> = {
+        let p = Particles {
+            particles: Vec::new(),
+            canvas_width: 0.0,
+            canvas_height: 0.0,
+        };
+        Mutex::new(p)
+    };
+}
+//Particle
+pub struct Particle {
+    x: f64,
+    y: f64,
+    vx: f64,
+    vy: f64,
+    color: String,
+}
 
-#[wasm_bindgen(start)]
-fn start() {
-    let document = web_sys::window().unwrap().document().unwrap();
-    let canvas = document.get_element_by_id("canvas").unwrap();
-    let canvas: web_sys::HtmlCanvasElement = canvas
-        .dyn_into::<web_sys::HtmlCanvasElement>()
-        .map_err(|_| ())
-        .unwrap();
+impl Particle {
+    fn new(x_starting_range: f64, y_starting_range: f64) -> Particle {
+        let mut rng = rand::thread_rng();
 
-    let context = canvas
-        .get_context("2d")
-        .unwrap()
-        .unwrap()
-        .dyn_into::<web_sys::CanvasRenderingContext2d>()
-        .unwrap();
+        Particle {
+            x: x_starting_range * rng.gen::<f64>(),
+            y: y_starting_range * rng.gen::<f64>(),
+            vx: 4.0 * rng.gen::<f64>() - 2.0,
+            vy: 4.0 * rng.gen::<f64>() - 2.0,
+            color: get_random_rgb(),
+        }
+    }
+}
+//Particles
+pub struct Particles {
+    particles: Vec<Particle>,
+    canvas_width: f64,
+    canvas_height: f64,
+}
 
-    context.begin_path();
+impl Particles {
+    fn create(&mut self, num: i32) {
+        for _ in 0..num {
+            self.particles
+                .push(Particle::new(self.canvas_width, self.canvas_height));
+        }
+    }
 
-    // Draw the outer circle.
-    context
-        .arc(75.0, 75.0, 50.0, 0.0, f64::consts::PI * 2.0)
-        .unwrap();
+    fn draw(&self) {
+        for p in self.particles.iter() {
+            draw_particle(p.x, p.y, &p.color, 2);
+        }
+    }
 
-    // Draw the mouth.
-    context.move_to(110.0, 75.0);
-    context.arc(75.0, 75.0, 35.0, 0.0, f64::consts::PI).unwrap();
+    fn update(&mut self) {
+        for p in self.particles.iter_mut() {
+            p.x += p.vx;
+            p.y += p.vy;
 
-    // Draw the left eye.
-    context.move_to(65.0, 65.0);
-    context
-        .arc(60.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-        .unwrap();
+            if p.x < 0.0 || p.x > self.canvas_width {
+                p.vx = -p.vx;
+            }
 
-    // Draw the right eye.
-    context.move_to(95.0, 65.0);
-    context
-        .arc(90.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-        .unwrap();
+            if p.y < 0.0 || p.y > self.canvas_height {
+                p.vy = -p.vy;
+            }
+        }
+    }
+}
+//Helper function
+fn get_random_rgb() -> String {
+    let mut r = 0;
+    let mut g = 0;
+    let mut b = 0;
+    let mut rng = rand::thread_rng();
 
-    context.stroke();
+    while r < 100 && g < 100 && b < 100 {
+        r = rng.gen_range(0..256);
+        g = rng.gen_range(0..256);
+        b = rng.gen_range(0..256);
+    }
+    format!("rgb({r},{g},{b})").to_string()
+}
+//Imported JS function from index.html
+#[wasm_bindgen]
+extern "C" {
+    fn draw_particle(x: f64, y: f64, s: &str, size: i32);
+}
+//Exported Rust functions used by index.html
+#[wasm_bindgen]
+pub fn create_particles(w: f64, h: f64, num: i32) {
+    PARTICLES.lock().unwrap().canvas_width = w;
+    PARTICLES.lock().unwrap().canvas_height = h;
+    PARTICLES.lock().unwrap().create(num);
+}
+
+#[wasm_bindgen]
+pub fn render_particles() {
+    PARTICLES.lock().unwrap().draw();
+    PARTICLES.lock().unwrap().update();
 }

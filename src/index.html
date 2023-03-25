@@ -1,23 +1,20 @@
-<!DOCTYPE html>
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <title>Smiley face example</title>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<style>
+		body {
+			background-color: #000;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
 </head>
 
 <body>
-  <canvas id="canvas" width="200" height="200"></canvas>
-
-  <script type="module">
-    import init from './space_clicker.js';
-
-    async function run() {
-      await init();
-    }
-
-    run();
-  </script>
+	<script type="module" src="initialiser.js"></script>
+	<canvas id="canvas"></canvas>
+	<script src="draw_particle.js"></script>
 </body>
 
 </html>
