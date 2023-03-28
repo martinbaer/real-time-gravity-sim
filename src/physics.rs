@@ -16,6 +16,7 @@ pub struct Bodies {
     pub ay: Vec<f64>,
     pub canvas_width: f64,
     pub canvas_height: f64,
+    // pub bh_tree: bh_tree::Tree,
 }
 impl Bodies {
     pub fn new_empty() -> Bodies {
@@ -29,6 +30,7 @@ impl Bodies {
             ay: Vec::new(),
             canvas_width: 0.0,
             canvas_height: 0.0,
+            // bh_tree: bh_tree::Tree::new_empty(),
         }
     }
 
