@@ -20,6 +20,13 @@ lazy_static! {
 #[wasm_bindgen]
 extern "C" {
     pub fn draw_body(x: f64, y: f64, color: &str, size: i32);
+    // for logging
+    #[wasm_bindgen(js_namespace = console)]
+    pub fn log(s: &str);
+    #[wasm_bindgen(js_namespace = console, js_name = log)]
+    pub fn log_u32(a: u32);
+    #[wasm_bindgen(js_namespace = console, js_name = log)]
+    pub fn log_many(a: &str, b: &str);
 }
 
 // Exported Rust functions to be used by initialiser.js

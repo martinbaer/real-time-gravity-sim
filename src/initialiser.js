@@ -1,10 +1,13 @@
 import init, { create_bodies, render_bodies } from './space_clicker.js';
+
+const NUM_STARTING_BODIES = 3;
+
 async function run() {
 	await init();
 	// From here on we use the functionality defined in wasm.
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	create_bodies(canvas.width, canvas.height, 1000);
+	create_bodies(canvas.width, canvas.height, NUM_STARTING_BODIES);
 
 	function loop() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);

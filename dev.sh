@@ -6,5 +6,5 @@ fi
 
 # if on linux run while inotifywait -e close_write myfile.py; do ./build.sh; done
 if [ "$OSTYPE" == "linux-gnu" ]; then
-    while inotifywait -e close_write ./src; do ./build.sh; done
+    while inotifywait -e close_write ./src/*; do ./build.sh; done
 fi

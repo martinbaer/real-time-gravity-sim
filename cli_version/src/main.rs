@@ -70,11 +70,6 @@ fn main() {
         if step % constants.write_interval == 0 {
             log_positions(&positions, &constants, &mut position_log);
         }
-        // TEMP: print out the positions
-        // println!("Step: {}", step);
-        // for i in 0..constants.num_bodies {
-        //     println!("{}: ({}, {})", i, positions.x[i], positions.y[i]);
-        // }
         // Step forward in time
         physics::step(
             &mut positions,
