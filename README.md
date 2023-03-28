@@ -13,7 +13,7 @@ It is currently a work-in-progress.
 	```brew install rustup```
 	* Windows:<br>
 	https://forge.rust-lang.org/infra/other-installation-methods.html
-* Rust Web-Assembly compiler: wasm-pack
+* Rust Web-Assembly compiler: wasm-pack and wasm-bindgen-cli
 	* ```cargo install wasm-pack```
 	* ```cargo install wasm-bindgen-cli```
 
@@ -24,11 +24,5 @@ It is currently a work-in-progress.
 	```brew install fswatch```
 	* Linux:<br>
 	It should be available as ```fswatch``` in your package manager. e.g. ```apt-get install fswatch```
-* Any http server
-	* NPM http server <br>
-	Install: ```npm install -g http-server``` <br>
-	Run: ```cd ./web && http-server```
-	* Python <br>
-	```python3 -m http.server 8000```
-	* VSCode live development server <br>
-	Right click on ./web/index.html > Open with Live Server
+* Any http server to serve static files
+	* For similicity I just use VSCode "Open with Live Server" for development

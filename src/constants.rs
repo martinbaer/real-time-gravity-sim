@@ -16,4 +16,4 @@ pub const STAR_COLOURS: [&str; STAR_COLOURS_LEN] = [
     "rgb(255,210,161)",
     "rgb(255,204,111)",
 ];
-pub const BODY_DRAW_SIZE: i32 = 2;
+pub const BODY_DRAW_SIZE: i32 = 1;

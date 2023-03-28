@@ -3,7 +3,7 @@ cargo build --target wasm32-unknown-unknown # --release
 wasm-bindgen target/wasm32-unknown-unknown/debug/space_clicker.wasm --out-dir ./web/ --target web
 cp src/index.html ./web/
 cp src/initialiser.js ./web/
-cp src/draw_particle.js ./web/
+cp src/draw_body.js ./web/
 # copy all assets in ./assets/* to ./web
 cp -r ./assets/* ./web
 

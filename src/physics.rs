@@ -3,74 +3,68 @@ use rand::{rngs::ThreadRng, Rng};
 mod bh_tree;
 
 use crate::constants::{BODY_DRAW_SIZE, STAR_COLOURS, STAR_COLOURS_LEN};
-use crate::draw_particle;
+use crate::draw_body;
 
-pub struct Body {
-    x: f64,
-    y: f64,
-    vx: f64,
-    vy: f64,
-    color: String,
-}
-
-impl Body {
-    fn new_random(x_starting_range: f64, y_starting_range: f64) -> Body {
-        let mut rng: ThreadRng = rand::thread_rng();
-
-        Body {
-            x: x_starting_range * rng.gen::<f64>(),
-            y: y_starting_range * rng.gen::<f64>(),
-            vx: 4.0 * rng.gen::<f64>() - 2.0,
-            vy: 4.0 * rng.gen::<f64>() - 2.0,
-            // random color from STAR_COLOURS
-            color: STAR_COLOURS[rng.gen_range(0..STAR_COLOURS_LEN)].to_string(),
-            // color: STAR_COLOURS[5].to_string(),
-        }
-    }
-    fn new_given(x: f64, y: f64, vx: f64, vy: f64) -> Body {
-        let mut rng: ThreadRng = rand::thread_rng();
-
-        Body {
-            x: x,
-            y: y,
-            vx: vx,
-            vy: vy,
-            color: STAR_COLOURS[rng.gen_range(0..STAR_COLOURS_LEN)].to_string(),
-        }
-    }
-}
-//Particles
+// The bodies struct is a Struct of Arrays (SoA) implementation of the bodies
 pub struct Bodies {
-    pub particles: Vec<Body>,
+    pub num_bodies: usize,
+    pub x: Vec<f64>,
+    pub y: Vec<f64>,
+    pub vx: Vec<f64>,
+    pub vy: Vec<f64>,
+    pub ax: Vec<f64>,
+    pub ay: Vec<f64>,
     pub canvas_width: f64,
     pub canvas_height: f64,
 }
-
 impl Bodies {
-    pub fn create(&mut self, num: i32) {
+    pub fn new_empty() -> Bodies {
+        Bodies {
+            num_bodies: 0,
+            x: Vec::new(),
+            y: Vec::new(),
+            vx: Vec::new(),
+            vy: Vec::new(),
+            ax: Vec::new(),
+            ay: Vec::new(),
+            canvas_width: 0.0,
+            canvas_height: 0.0,
+        }
+    }
+
+    pub fn create(&mut self, num: usize) {
+        self.num_bodies = num;
         for _ in 0..num {
-            self.particles
-                .push(Body::new_random(self.canvas_width, self.canvas_height));
+            let mut rng: ThreadRng = rand::thread_rng();
+            self.x.push(self.canvas_width * rng.gen::<f64>());
+            self.y.push(self.canvas_height * rng.gen::<f64>());
+            self.vx.push(4.0 * rng.gen::<f64>() - 2.0);
+            self.vy.push(4.0 * rng.gen::<f64>() - 2.0);
+            self.ax.push(0.0);
+            self.ay.push(0.0);
         }
     }
 
     pub fn draw(&self) {
-        for p in self.particles.iter() {
-            draw_particle(p.x, p.y, &p.color, BODY_DRAW_SIZE);
+        // draw the bodies with color rotating through STAR_COLOURS
+        for i in 0..self.num_bodies {
+            let color: &str = STAR_COLOURS[i % STAR_COLOURS_LEN];
+            draw_body(self.x[i], self.y[i], color, BODY_DRAW_SIZE);
         }
     }
 
     pub fn update(&mut self) {
-        for p in self.particles.iter_mut() {
-            p.x += p.vx;
-            p.y += p.vy;
+        // update the positions of the bodies
+        for i in 0..self.num_bodies {
+            self.x[i] += self.vx[i];
+            self.y[i] += self.vy[i];
 
-            if p.x < 0.0 || p.x > self.canvas_width {
-                p.vx = -p.vx;
+            if self.x[i] < 0.0 || self.x[i] > self.canvas_width {
+                self.vx[i] = -self.vx[i];
             }
 
-            if p.y < 0.0 || p.y > self.canvas_height {
-                p.vy = -p.vy;
+            if self.y[i] < 0.0 || self.y[i] > self.canvas_height {
+                self.vy[i] = -self.vy[i];
             }
         }
     }
