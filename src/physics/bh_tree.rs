@@ -52,11 +52,27 @@ impl NodeDesc {
     }
 }
 
+struct Insert {
+    body_x: f64,
+    body_y: f64,
+    target_node: NodeDesc,
+}
+impl Insert {
+    fn clone(&self) -> Insert {
+        Insert {
+            body_x: self.body_x,
+            body_y: self.body_y,
+            target_node: self.target_node.clone(),
+        }
+    }
+}
+
 pub struct Tree {
     pub nodes: Vec<Node>,
     num_nodes: usize,
     vec_size: usize,
     pub root_half_width: f64,
+    pub root_centre: (f64, f64),
 }
 impl Tree {
     pub fn new() -> Tree {
@@ -67,6 +83,7 @@ impl Tree {
             num_nodes: 1,
             vec_size: 0,
             root_half_width: 0.0,
+            root_centre: (0.0, 0.0),
         }
     }
     fn grow(&mut self) {
@@ -192,24 +209,11 @@ impl Tree {
         // Initialise root node description
         let root_node_desc: NodeDesc = NodeDesc {
             index: ROOT_NODE_INDEX,
-            centre_x: 0.0,
-            centre_y: 0.0,
+            centre_x: self.root_centre.0,
+            centre_y: self.root_centre.1,
             half_width: self.root_half_width,
         };
-        struct Insert {
-            body_x: f64,
-            body_y: f64,
-            target_node: NodeDesc,
-        }
-        impl Insert {
-            fn clone(&self) -> Insert {
-                Insert {
-                    body_x: self.body_x,
-                    body_y: self.body_y,
-                    target_node: self.target_node.clone(),
-                }
-            }
-        }
+
         // Initialise insert stack
         let mut insert_stack: Vec<Insert> = Vec::with_capacity(num_bodies);
         for i in 0..num_bodies {
@@ -278,7 +282,7 @@ impl Tree {
                 insert_stack.push(insert_as_child);
             }
             // print tree
-            log(self.print(0, 0).as_str());
+            // log(self.print(0, 0).as_str());
         }
     }
     pub fn print(&self, depth: usize, node_index: usize) -> String {

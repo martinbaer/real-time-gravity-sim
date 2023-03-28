@@ -1,6 +1,6 @@
 import init, { create_bodies, render_bodies } from './space_clicker.js';
 
-const NUM_STARTING_BODIES = 3;
+const NUM_STARTING_BODIES = 3000;
 
 async function run() {
 	await init();

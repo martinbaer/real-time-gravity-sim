@@ -55,6 +55,8 @@ impl Bodies {
         }
         // Set the half-width of the root node to the largest dimension of the system
         self.bh_tree.root_half_width = self.canvas_width.max(self.canvas_height) / 2.0;
+        // Set the centre of the root node to the centre of the system
+        self.bh_tree.root_centre = (self.canvas_width / 2.0, self.canvas_height / 2.0);
     }
 
     pub fn draw(&self) {
@@ -67,8 +69,9 @@ impl Bodies {
 
     pub fn update(&mut self) {
         // print "update" to the console
-        log("update");
         log_u32(self.num_bodies as u32);
+        log("updating");
+
         // Re-construct the Barnes-Hut tree
         self.bh_tree.construct(&self.x, &self.y, self.num_bodies);
 
