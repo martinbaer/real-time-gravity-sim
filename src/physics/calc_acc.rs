@@ -1,3 +1,7 @@
+use crate::constants::{SOFTENING, THETA};
+
+use super::bh_tree::Tree;
+
 pub fn add_node_acceleration(
     body: (&f64, &f64),
     bh_tree: &Tree,

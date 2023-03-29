@@ -215,7 +215,7 @@ impl Tree {
         };
 
         // Initialise insert stack
-        let mut insert_stack: Vec<Insert> = Vec::with_capacity(num_bodies);
+        let mut insert_stack: Vec<Insert> = Vec::with_capacity(num_bodies); // TODO: avoid reallocation
         for i in 0..num_bodies {
             // Initialise insert
             let insert: Insert = Insert {
