@@ -17,7 +17,7 @@ pub const STAR_COLOURS: [&str; STAR_COLOURS_LEN] = [
     "rgb(255,204,111)",
 ];
 pub const BODY_DRAW_SIZE: i32 = 1;
-pub const BODY_DRAW_SIZE_MOBILE: i32 = 2;
+pub const BODY_DRAW_SIZE_MOBILE: i32 = 3;
 
 pub const SOFTENING: f64 = 10.0;
 pub const THETA: f64 = 0.9;
