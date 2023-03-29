@@ -2,6 +2,7 @@ use rand::{rngs::ThreadRng, Rng};
 
 mod bh_tree;
 mod calc_acc;
+mod logger;
 
 use crate::constants::{
     BODY_DRAW_SIZE, BODY_DRAW_SIZE_MOBILE, GRAVITY, ROOT_NODE_INDEX, STAR_COLOURS, STAR_COLOURS_LEN,
@@ -9,6 +10,7 @@ use crate::constants::{
 use crate::{draw_body, log, log_u32};
 
 use self::bh_tree::Tree;
+use self::logger::log_energy;
 
 // The bodies struct is a Struct of Arrays (SoA) implementation of the bodies
 pub struct Bodies {
@@ -130,20 +132,14 @@ impl Bodies {
                     },
                 );
             }
-            // draw_body(self.x[i], self.y[i], color, BODY_DRAW_SIZE);
         }
+        // print percentile * 2
+        // log(&format!("Width (AU): {}", percentile * 2.0));
     }
 
     pub fn update(&mut self) {
-        // print "update" to the console
-        log_u32(self.num_bodies as u32);
-        // log("updating");
-
         // Re-construct the Barnes-Hut tree
         self.bh_tree.construct(&self.x, &self.y, self.num_bodies);
-        // log("successfully constructed tree");
-        // log(self.bh_tree.print(0, 0).as_str());
-
         // Compute the acceleration for each body
         for i in 0..self.num_bodies {
             let (new_ax, new_ay): (f64, f64) = calc_acc::add_node_acceleration(
@@ -163,5 +159,8 @@ impl Bodies {
             self.x[i] += self.vx[i];
             self.y[i] += self.vy[i];
         }
+
+        // log enegy
+        log_energy(&self.x, &self.y, &self.vx, &self.vy, self.num_bodies);
     }
 }

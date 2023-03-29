@@ -1,6 +1,6 @@
 import init, { create_bodies, render_bodies } from './space_clicker.js';
 
-const NUM_STARTING_BODIES = 3000;
+const NUM_STARTING_BODIES = 1000;
 
 async function run() {
 	await init();
@@ -15,16 +15,30 @@ async function run() {
 
 	create_bodies(canvas.width, canvas.height, NUM_STARTING_BODIES, is_mobile);
 
+	// function loop() {
+	// 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	// 	render_bodies();
+	// 	requestAnimationFrame(loop);
+	// }
+	// loop();
+	// same as above by prints out the rate of the loop every second
+	let last_time = Date.now();
+	let frames = 0;
 	function loop() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		render_bodies();
+		frames += 1;
+		let now = Date.now();
+		let delta = now - last_time;
+		if (delta > 1000) {
+			console.log("FPS: " + frames);
+			frames = 0;
+			last_time = now;
+		}
 		requestAnimationFrame(loop);
 	}
 	loop();
-	// will the above loop be a constant speed
-	// or will it be affected by the speed of the computer?
-	// a: it will be affected by the speed of the computer
-	// how do we make it a constant speed?
+
 
 }
 
