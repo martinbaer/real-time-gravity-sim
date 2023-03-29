@@ -44,3 +44,11 @@ pub fn render_bodies() {
     BODIES.lock().unwrap().draw();
     BODIES.lock().unwrap().update();
 }
+#[wasm_bindgen]
+pub fn on_click(x: f64, y: f64) {
+    BODIES.lock().unwrap().on_click(x, y);
+}
+#[wasm_bindgen]
+pub fn off_click(x: f64, y: f64) {
+    BODIES.lock().unwrap().off_click(x, y);
+}
