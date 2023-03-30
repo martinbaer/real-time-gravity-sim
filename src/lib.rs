@@ -2,16 +2,16 @@ use std::sync::Mutex;
 use wasm_bindgen::prelude::*;
 
 mod constants;
-mod physics;
+mod simulation;
 
-use crate::physics::Bodies;
+use crate::simulation::Simulation;
 
 #[macro_use]
 extern crate lazy_static;
 // Global variable for the bodies
 lazy_static! {
-    static ref BODIES: Mutex<Bodies> = {
-        let data = Bodies::new_empty();
+    static ref BODIES: Mutex<Simulation> = {
+        let data = Simulation::new_empty();
         Mutex::new(data)
     };
 }
@@ -32,12 +32,7 @@ extern "C" {
 // Exported Rust functions to be used by initialiser.js
 #[wasm_bindgen]
 pub fn create_bodies(w: f64, h: f64, num: usize, is_mobile: bool) {
-    BODIES.lock().unwrap().canvas_width = w;
-    BODIES.lock().unwrap().canvas_half_width = w / 2.0;
-    BODIES.lock().unwrap().canvas_height = h;
-    BODIES.lock().unwrap().canvas_half_height = h / 2.0;
-    BODIES.lock().unwrap().is_mobile = is_mobile;
-    BODIES.lock().unwrap().create(num);
+    BODIES.lock().unwrap().create(num, w, h, is_mobile);
 }
 #[wasm_bindgen]
 pub fn render_bodies() {

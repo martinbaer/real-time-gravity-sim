@@ -15,31 +15,25 @@ async function run() {
 	// Initialise the simulation
 	create_bodies(canvas.width, canvas.height, NUM_STARTING_BODIES, is_mobile);
 	// Add interaction listeners
-	canvas.addEventListener("mousedown", function (e) {
-		on_click(e.clientX, e.clientY);
-	});
+	let body_spawning_active = false;
 	canvas.addEventListener("mouseup", function (e) {
-		off_click(e.clientX, e.clientY);
+		body_spawning_active = !body_spawning_active;
+		if (body_spawning_active) {
+			on_click(e.clientX, e.clientY);
+		} else {
+			off_click(e.clientX, e.clientY);
+		}
+		// off_click(e.clientX, e.clientY);
 	});
-	let mobile_touch_toggle = false;
 	canvas.addEventListener("touchstart", function (e) {
 		e.preventDefault();
-		mobile_touch_toggle = !mobile_touch_toggle;
-		if (mobile_touch_toggle) {
+		body_spawning_active = !body_spawning_active;
+		if (body_spawning_active) {
 			on_click(e.touches[0].clientX, e.touches[0].clientY);
 		} else {
 			off_click(e.touches[0].clientX, e.touches[0].clientY);
 		}
 	});
-	// canvas.addEventListener("touchend", function (e) {
-	// 	off_click(e.touches[0].clientX, e.touches[0].clientY);
-	// });
-	// canvas.addEventListener("touchmove", function (e) {
-	// 	e.preventDefault();
-	// });
-	// canvas.addEventListener("touchcancel", function (e) {
-	// 	e.preventDefault();
-	// });
 
 	// Start the animation loop
 	let last_time = Date.now();
