@@ -6,9 +6,7 @@ mod energy_conservation;
 mod spawner;
 
 use crate::constants::{
-    BODY_DRAW_SIZE, BODY_DRAW_SIZE_MOBILE, DT, GRAVITY, ROOT_NODE_INDEX, SPAWNED_BODY_SPEED,
-    SPAWNED_BODY_SPEED_MOBILE, SPAWN_BODY_COLOR, SPAWN_BODY_DRAW_SIZE, SPAWN_BODY_DRAW_SIZE_MOBILE,
-    SPAWN_RANDOM_OFFSET, SPEED_LIMIT, SPEED_LIMIT_SQ, START_BOX_SIZE, STAR_COLOURS,
+    BODY_DRAW_SIZE, BODY_DRAW_SIZE_MOBILE, ROOT_NODE_INDEX, START_BOX_SIZE, STAR_COLOURS,
     STAR_COLOURS_LEN,
 };
 use crate::{draw_body, log, log_u32};
@@ -33,10 +31,12 @@ pub struct Simulation {
     pub bh_tree: bh_tree::Tree,
     pub com_distances: Vec<f64>,
     pub is_mobile: bool,
-    spawner: Spawner,
-    clicked: bool,
+    pub spawner: Spawner,
+    pub clicked: bool,
     pub com: (f64, f64),
     pub scale: f64,
+    pub dt: f64,
+    pub gravity: f64,
 }
 impl Simulation {
     pub fn new_empty() -> Simulation {
@@ -59,6 +59,8 @@ impl Simulation {
             clicked: false,
             com: (0.0, 0.0),
             scale: 1.0,
+            dt: 0.0,
+            gravity: 0.0,
         }
     }
     pub fn create(&mut self, num: usize, canvas_width: f64, canvas_height: f64, is_mobile: bool) {
@@ -76,16 +78,10 @@ impl Simulation {
         self.ax.reserve(num);
         self.ay.reserve(num);
         self.com_distances.reserve(num);
+        let mut rng: ThreadRng = rand::thread_rng();
         for _ in 0..num {
-            let mut rng: ThreadRng = rand::thread_rng();
-            // self.x.push(START_BOX_SIZE * rng.gen::<f64>());
-            // self.y.push(START_BOX_SIZE * rng.gen::<f64>());
-            // same as above but uniform distribution
             self.x.push(rng.gen_range(-START_BOX_SIZE..START_BOX_SIZE));
             self.y.push(rng.gen_range(-START_BOX_SIZE..START_BOX_SIZE));
-
-            // self.vx.push(4.0 * rng.gen::<f64>() - 2.0);
-            // self.vy.push(4.0 * rng.gen::<f64>() - 2.0);
             self.vx.push(0.0);
             self.vy.push(0.0);
             self.ax.push(0.0);
@@ -99,11 +95,11 @@ impl Simulation {
     }
     pub fn on_click(&mut self, x: f64, y: f64) {
         self.clicked = true;
-        self.spawner.on_click(x, y);
+        self.spawner.update_mouse_position(x, y);
     }
     pub fn off_click(&mut self, x: f64, y: f64) {
         self.clicked = false;
-        self.spawner.off_click(
+        self.spawner.add_spawned_bodies_to_simulation(
             x,
             y,
             &mut self.x,
@@ -141,7 +137,6 @@ impl Simulation {
                 draw_body(canvas_x, canvas_y, color, body_draw_size);
             }
         }
-
         self.spawner.draw_spawned_bodies(self.com, self.scale);
 
         // print percentile * 2
@@ -171,17 +166,10 @@ impl Simulation {
 
         // Update the velocity and position for each body
         for i in 0..self.num_bodies {
-            self.vx[i] += self.ax[i] * GRAVITY * DT;
-            self.vy[i] += self.ay[i] * GRAVITY * DT;
-            // check if exceeding max velocity
-            if self.vx[i] * self.vx[i] + self.vy[i] * self.vy[i] > SPEED_LIMIT_SQ {
-                log("speed limit hit");
-                let speed: f64 = (self.vx[i] * self.vx[i] + self.vy[i] * self.vy[i]).sqrt();
-                self.vx[i] *= SPEED_LIMIT / speed;
-                self.vy[i] *= SPEED_LIMIT / speed;
-            }
-            self.x[i] += self.vx[i] * DT;
-            self.y[i] += self.vy[i] * DT;
+            self.vx[i] += self.ax[i] * self.gravity * self.dt;
+            self.vy[i] += self.ay[i] * self.gravity * self.dt;
+            self.x[i] += self.vx[i] * self.dt;
+            self.y[i] += self.vy[i] * self.dt;
         }
 
         // log enegy

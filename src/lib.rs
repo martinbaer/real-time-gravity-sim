@@ -47,3 +47,19 @@ pub fn on_click(x: f64, y: f64) {
 pub fn off_click(x: f64, y: f64) {
     BODIES.lock().unwrap().off_click(x, y);
 }
+#[wasm_bindgen]
+pub fn set_dt(dt: f64) {
+    BODIES.lock().unwrap().dt = dt;
+}
+#[wasm_bindgen]
+pub fn set_gravity(gravity: f64) {
+    BODIES.lock().unwrap().gravity = gravity;
+}
+#[wasm_bindgen]
+pub fn set_spawn_radius(spawn_radius: f64) {
+    BODIES.lock().unwrap().spawner.spawn_radius = spawn_radius;
+}
+#[wasm_bindgen]
+pub fn set_spawn_speed(g: f64) {
+    BODIES.lock().unwrap().spawner.spawn_speed = g;
+}

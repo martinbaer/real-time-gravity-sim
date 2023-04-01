@@ -1,4 +1,4 @@
-use crate::{constants::GRAVITY, log};
+use crate::log;
 
 // Logs the energy conservation given positions, velocities, and a file to write to.
 //
@@ -6,7 +6,14 @@ use crate::{constants::GRAVITY, log};
 // The kinetic energy is defined as 1/2 * v^2
 // The potential energy is defined as -G / r
 // The total energy is defined as the sum of the kinetic energy and the potential energy
-pub fn log_energy(x: &Vec<f64>, y: &Vec<f64>, vx: &Vec<f64>, vy: &Vec<f64>, num_bodies: usize) {
+pub fn log_energy(
+    x: &Vec<f64>,
+    y: &Vec<f64>,
+    vx: &Vec<f64>,
+    vy: &Vec<f64>,
+    num_bodies: usize,
+    gravity: f64,
+) {
     // Calculate the total energy
     let mut total_kinetic_energy: f64 = 0.0;
     let mut total_potential_energy: f64 = 0.0;
@@ -18,7 +25,7 @@ pub fn log_energy(x: &Vec<f64>, y: &Vec<f64>, vx: &Vec<f64>, vy: &Vec<f64>, num_
         for j in 0..num_bodies {
             if i != j {
                 let r: f64 = ((x[i] - x[j]).powi(2) + (y[i] - y[j]).powi(2)).sqrt();
-                potential_energy -= GRAVITY / r;
+                potential_energy -= gravity / r;
             }
         }
         // Add the kinetic and potential energy to the total

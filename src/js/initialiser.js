@@ -1,9 +1,23 @@
-import init, { create_bodies, render_bodies, on_click, off_click } from './space_clicker.js';
+import init, { create_bodies, render_bodies, on_click, off_click, set_dt, set_gravity, set_spawn_radius, set_spawn_speed } from './space_clicker.js';
 
-const NUM_STARTING_BODIES = 3;
+const NUM_STARTING_BODIES = 10;
+
+
+const INITIAL_TIME_STEP = 1;
+const TIME_STEP_MULTIPLIER = 0.1;
+
+const INITIAL_GRAVITY = 1;
+
+const INITIAL_SPAWN_RADIUS = 50;
+
+const INITIAL_SPAWN_SPEED = 1;
+const SPAWN_SPEED_MULTIPLIER = 0.01;
+
+const BUTTON_SCALE_FACTOR = 2;
 
 async function run() {
 	await init();
+
 	// Gather info needed in the wasm module
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
@@ -14,7 +28,91 @@ async function run() {
 	}
 	// Initialise the simulation
 	create_bodies(canvas.width, canvas.height, NUM_STARTING_BODIES, is_mobile);
-	// Add interaction listeners
+
+	// VARIABLES
+	set_dt(INITIAL_TIME_STEP * TIME_STEP_MULTIPLIER);
+	document.getElementById("time-step").innerHTML = INITIAL_TIME_STEP;
+	set_gravity(INITIAL_GRAVITY);
+	document.getElementById("gravity").innerHTML = INITIAL_GRAVITY;
+	set_spawn_radius(INITIAL_SPAWN_RADIUS);
+	document.getElementById("spawn-radius").innerHTML = INITIAL_SPAWN_RADIUS;
+	set_spawn_speed(INITIAL_SPAWN_SPEED * SPAWN_SPEED_MULTIPLIER);
+	document.getElementById("spawn-speed").innerHTML = INITIAL_SPAWN_SPEED;
+
+
+	// Add listeners for the parameters
+	document.getElementById("time-step").addEventListener("blur", function (e) {
+		let timeStep = cleanNumberInput(e.target.innerHTML);
+		e.target.innerHTML = timeStep;
+		set_dt(timeStep * TIME_STEP_MULTIPLIER);
+
+	});
+	document.getElementById("gravity").addEventListener("blur", function (e) {
+		let gravity = cleanNumberInput(e.target.innerHTML);
+		e.target.innerHTML = gravity;
+		set_gravity(gravity);
+	});
+	document.getElementById("spawn-radius").addEventListener("blur", function (e) {
+		let spawnRadius = cleanNumberInput(e.target.innerHTML);
+		e.target.innerHTML = spawnRadius;
+		set_spawn_radius(spawnRadius);
+	});
+	document.getElementById("spawn-speed").addEventListener("blur", function (e) {
+		let spawnSpeed = cleanNumberInput(e.target.innerHTML);
+		e.target.innerHTML = spawnSpeed;
+		set_spawn_speed(spawnSpeed * SPAWN_SPEED_MULTIPLIER);
+	});
+	document.getElementById("increase-time-step").addEventListener("click", function (e) {
+		let timeStep = cleanNumberInput(document.getElementById("time-step").innerHTML);
+		timeStep *= BUTTON_SCALE_FACTOR;
+		document.getElementById("time-step").innerHTML = timeStep;
+		set_dt(timeStep * TIME_STEP_MULTIPLIER);
+	});
+	document.getElementById("decrease-time-step").addEventListener("click", function (e) {
+		let timeStep = cleanNumberInput(document.getElementById("time-step").innerHTML);
+		timeStep /= BUTTON_SCALE_FACTOR;
+		document.getElementById("time-step").innerHTML = timeStep;
+		set_dt(timeStep * TIME_STEP_MULTIPLIER);
+	});
+	document.getElementById("increase-gravity").addEventListener("click", function (e) {
+		let gravity = cleanNumberInput(document.getElementById("gravity").innerHTML);
+		gravity *= BUTTON_SCALE_FACTOR;
+		document.getElementById("gravity").innerHTML = gravity;
+		set_gravity(gravity);
+	});
+	document.getElementById("decrease-gravity").addEventListener("click", function (e) {
+		let gravity = cleanNumberInput(document.getElementById("gravity").innerHTML);
+		gravity /= BUTTON_SCALE_FACTOR;
+		document.getElementById("gravity").innerHTML = gravity;
+		set_gravity(gravity);
+	});
+	document.getElementById("increase-spawn-radius").addEventListener("click", function (e) {
+		let spawnRadius = cleanNumberInput(document.getElementById("spawn-radius").innerHTML);
+		spawnRadius *= BUTTON_SCALE_FACTOR;
+		document.getElementById("spawn-radius").innerHTML = spawnRadius;
+		set_spawn_radius(spawnRadius);
+	});
+	document.getElementById("decrease-spawn-radius").addEventListener("click", function (e) {
+		let spawnRadius = cleanNumberInput(document.getElementById("spawn-radius").innerHTML);
+		spawnRadius /= BUTTON_SCALE_FACTOR;
+		document.getElementById("spawn-radius").innerHTML = spawnRadius;
+		set_spawn_radius(spawnRadius);
+	});
+	document.getElementById("increase-spawn-speed").addEventListener("click", function (e) {
+		let spawnSpeed = cleanNumberInput(document.getElementById("spawn-speed").innerHTML);
+		spawnSpeed *= BUTTON_SCALE_FACTOR;
+		document.getElementById("spawn-speed").innerHTML = spawnSpeed;
+		set_spawn_speed(spawnSpeed * SPAWN_SPEED_MULTIPLIER);
+	});
+	document.getElementById("decrease-spawn-speed").addEventListener("click", function (e) {
+		let spawnSpeed = cleanNumberInput(document.getElementById("spawn-speed").innerHTML);
+		spawnSpeed /= BUTTON_SCALE_FACTOR;
+		document.getElementById("spawn-speed").innerHTML = spawnSpeed;
+		set_spawn_speed(spawnSpeed * SPAWN_SPEED_MULTIPLIER);
+	});
+
+
+	// Add spawning listeners
 	let body_spawning_active = false;
 	canvas.addEventListener("mouseup", function (e) {
 		body_spawning_active = !body_spawning_active;
@@ -56,4 +154,11 @@ async function run() {
 
 run();
 
-
+// removes non numbers (excluding ".") and if the string is empty returns "0"
+function cleanNumberInput(string) {
+	let cleanString = string.replace(/[^0-9.]/g, "");
+	if (cleanString === "") {
+		return "0";
+	}
+	return cleanString;
+}

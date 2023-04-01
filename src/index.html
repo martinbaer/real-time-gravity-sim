@@ -2,19 +2,41 @@
 
 <head>
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
-	<style>
-		body {
-			background-color: #000;
-			margin: 0;
-			padding: 0;
-		}
-	</style>
+	<link rel="stylesheet" href="style.css">
 </head>
 
-<body style="user-select: none;">
+<body>
 	<script type="module" src="initialiser.js"></script>
-	<!-- add user-select: noselect -->
+
 	<canvas id="canvas"></canvas>
+
+	<div id="parameters">
+		<div>
+			<label>Time Step = </label>
+			<span class="parameter-input" id="time-step" contenteditable="true">100</span>
+			<button class="parameter-adjust-button" id="increase-time-step">+</button>
+			<button class="parameter-adjust-button" id="decrease-time-step">-</button>
+		</div>
+		<div>
+			<label>Gravity = </label>
+			<span class="parameter-input" id="gravity" contenteditable="true">100</span>
+			<button class="parameter-adjust-button" id="increase-gravity">+</button>
+			<button class="parameter-adjust-button" id="decrease-gravity">-</button>
+		</div>
+		<div>
+			<label>Spawn Speed = </label>
+			<span class="parameter-input" id="spawn-speed" contenteditable="true">100</span>
+			<button class="parameter-adjust-button" id="increase-spawn-speed">+</button>
+			<button class="parameter-adjust-button" id="decrease-spawn-speed">-</button>
+		</div>
+		<div>
+			<label>Spawn Radius = </label>
+			<span class="parameter-input" id="spawn-radius" contenteditable="true">100</span>
+			<button class="parameter-adjust-button" id="increase-spawn-radius">+</button>
+			<button class="parameter-adjust-button" id="decrease-spawn-radius">-</button>
+		</div>
+	</div>
+
 	<script src="draw_body.js"></script>
 </body>
 

@@ -1,8 +1,73 @@
-/* body canvas {
+body {
+	background-color: #000;
+	margin: 0;
+	padding: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+#canvas {
+}
+
+#parameters {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 2rem;
+	background-color: rgba(52, 52, 52, 0.5);
+	z-index: 1000;
+	color: white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	/* padding but without increasing width */
+	box-sizing: border-box;
+	padding: 0 1rem;
+}
+
+span {
+	all: unset;
+	width: 5rem;
+}
+
+button {
+	all: unset;
+	width: 1rem;
+}
+
+button:hover {
+	cursor: pointer;
+	/* bold */
+	font-weight: bold;
+	/* no select on any device */
 	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
-	-khtml-user-select: none;
 	-ms-user-select: none;
-	-webkit-touch-callout: none !important;
-} */
+}
+
+/* Firefox */
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+.parameter-input {
+	margin-right: 0.2rem;
+}
+.parameter-input:empty:before {
+	content: attr(placeholder);
+	color: gray;
+}
+.parameter-input:focus {
+	outline: white dashed 1px;
+}
+/* found this online --- it prevents the user from being able to make a (visible) newline */
+.parameter-input br {
+	display: none;
+}
+
+.parameter-adjust-button {
+	/* increase font size */
+	font-size: 1.2rem;
+}
