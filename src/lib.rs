@@ -70,3 +70,7 @@ pub fn update_mouse_position(x: f64, y: f64) {
     BODIES.lock().unwrap().spawner.current_mouse_x = x;
     BODIES.lock().unwrap().spawner.current_mouse_y = y;
 }
+#[wasm_bindgen]
+pub fn set_scale_multiplier(scale_multiplier: f64) {
+    BODIES.lock().unwrap().scale_multiplier = scale_multiplier;
+}

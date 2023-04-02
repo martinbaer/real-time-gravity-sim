@@ -1,4 +1,4 @@
-import init, { create_bodies, render_bodies, on_click, off_click, set_dt, set_gravity, set_spawn_radius, set_spawn_speed, update_mouse_position } from './space_clicker.js';
+import init, { create_bodies, render_bodies, on_click, off_click, set_dt, set_gravity, set_spawn_radius, set_spawn_speed, update_mouse_position, set_scale_multiplier } from './space_clicker.js';
 
 const NUM_STARTING_BODIES = 10;
 
@@ -13,7 +13,7 @@ const INITIAL_SPAWN_RADIUS = 50;
 const INITIAL_SPAWN_SPEED = 1;
 const SPAWN_SPEED_MULTIPLIER = 0.01;
 
-const BUTTON_SCALE_FACTOR = 2;
+const BUTTON_SCALE_FACTOR = 1.5;
 
 async function run() {
 	await init();
@@ -111,18 +111,39 @@ async function run() {
 		set_spawn_speed(spawnSpeed * SPAWN_SPEED_MULTIPLIER);
 	});
 
+	// document.getElementById("gravity").addEventListener("blur", function (e) {
+	// 	let gravity = cleanNumberInput(e.target.innerHTML);
+	// 	e.target.innerHTML = gravity;
+	// 	set_gravity(gravity);
+	// });
+
+	document.getElementById("zoom").addEventListener("blur", function (e) {
+		let zoom = cleanNumberInput(e.target.innerHTML);
+		e.target.innerHTML = zoom;
+		set_scale_multiplier(zoom);
+	});
+	document.getElementById("increase-zoom").addEventListener("click", function (e) {
+		let zoom = cleanNumberInput(document.getElementById("zoom").innerHTML);
+		zoom *= BUTTON_SCALE_FACTOR;
+		document.getElementById("zoom").innerHTML = zoom;
+		set_scale_multiplier(zoom);
+	});
+	document.getElementById("decrease-zoom").addEventListener("click", function (e) {
+		let zoom = cleanNumberInput(document.getElementById("zoom").innerHTML);
+		zoom /= BUTTON_SCALE_FACTOR;
+		document.getElementById("zoom").innerHTML = zoom;
+		set_scale_multiplier(zoom);
+	});
 
 	// Add spawning listeners
-	let body_spawning_active = false;
-	canvas.addEventListener("mouseup", function (e) {
-		body_spawning_active = !body_spawning_active;
-		if (body_spawning_active) {
-			on_click(e.clientX, e.clientY);
-		} else {
-			off_click(e.clientX, e.clientY);
-		}
-		// off_click(e.clientX, e.clientY);
+	canvas.addEventListener("mousedown", function (e) {
+		on_click(e.clientX, e.clientY);
+		update_mouse_position(e.clientX, e.clientY);
 	});
+	canvas.addEventListener("mouseup", function (e) {
+		off_click(e.clientX, e.clientY);
+	});
+	let body_spawning_active = false;
 	canvas.addEventListener("touchstart", function (e) {
 		e.preventDefault();
 		body_spawning_active = !body_spawning_active;

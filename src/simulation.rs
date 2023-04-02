@@ -35,6 +35,7 @@ pub struct Simulation {
     pub clicked: bool,
     pub com: (f64, f64),
     pub scale: f64,
+    pub scale_multiplier: f64,
     pub dt: f64,
     pub gravity: f64,
 }
@@ -59,6 +60,7 @@ impl Simulation {
             clicked: false,
             com: (0.0, 0.0),
             scale: 1.0,
+            scale_multiplier: 1.0,
             dt: 0.0,
             gravity: 0.0,
         }
@@ -118,7 +120,7 @@ impl Simulation {
     pub fn draw(&mut self) {
         self.com = self.get_com();
         let percentile: f64 = self.get_99th_percentile(self.com);
-        self.scale = self.canvas_width / (2.0 * percentile);
+        self.scale = self.scale_multiplier * self.canvas_width / (2.0 * percentile);
         for i in 0..self.num_bodies {
             // calculate the canvas position of the body such that the centre of mass is at the centre of the canvas (canvas_half_width, canvas_half_height) and 99% of the bodies are inside the canvas
             let canvas_x: f64 = (self.x[i] - self.com.0) * self.scale + self.canvas_half_width;

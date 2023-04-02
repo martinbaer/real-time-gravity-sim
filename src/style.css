@@ -6,7 +6,8 @@ body {
 		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-#canvas {}
+#canvas {
+}
 
 #parameters {
 	position: absolute;
@@ -23,7 +24,7 @@ body {
 
 	/* padding but without increasing width */
 	box-sizing: border-box;
-	padding: 0 1rem;
+	padding: 0.1rem 1rem;
 }
 
 span {
@@ -75,7 +76,6 @@ input[type="number"] {
 	font-size: 1.2rem;
 }
 
-
 #sim-info {
 	/* transparent div at bottom of screen, but not extending the screen */
 	position: absolute;
@@ -87,17 +87,22 @@ input[type="number"] {
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 1000;
 	box-sizing: border-box;
-	margin: 0;
+	margin: 0.3rem 0;
 	padding: 0 1rem;
 
-
 	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
 
-
+#num-bodies {
+	padding-right: 0;
+	margin-right: 0;
 }
 
 #sim-info label {
-	padding-right: 0.25rem;
+	/* padding-right: 0.25rem; */
 	height: 1rem;
 }
 
