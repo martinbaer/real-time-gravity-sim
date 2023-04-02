@@ -20,6 +20,8 @@ lazy_static! {
 #[wasm_bindgen]
 extern "C" {
     pub fn draw_body(x: f64, y: f64, color: &str, size: i32);
+    pub fn draw_arrow(x1: f64, y1: f64, x2: f64, y2: f64, color: &str);
+    pub fn increase_num_bodies(num: usize);
     // for logging
     #[wasm_bindgen(js_namespace = console)]
     pub fn log(s: &str);
@@ -62,4 +64,9 @@ pub fn set_spawn_radius(spawn_radius: f64) {
 #[wasm_bindgen]
 pub fn set_spawn_speed(g: f64) {
     BODIES.lock().unwrap().spawner.spawn_speed = g;
+}
+#[wasm_bindgen]
+pub fn update_mouse_position(x: f64, y: f64) {
+    BODIES.lock().unwrap().spawner.current_mouse_x = x;
+    BODIES.lock().unwrap().spawner.current_mouse_y = y;
 }

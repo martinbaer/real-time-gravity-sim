@@ -95,7 +95,8 @@ impl Simulation {
     }
     pub fn on_click(&mut self, x: f64, y: f64) {
         self.clicked = true;
-        self.spawner.update_mouse_position(x, y);
+        self.spawner.spawning_mouse_x = x;
+        self.spawner.spawning_mouse_y = y;
     }
     pub fn off_click(&mut self, x: f64, y: f64) {
         self.clicked = false;
@@ -137,7 +138,10 @@ impl Simulation {
                 draw_body(canvas_x, canvas_y, color, body_draw_size);
             }
         }
-        self.spawner.draw_spawned_bodies(self.com, self.scale);
+
+        if self.clicked {
+            self.spawner.draw_spawned_bodies(self.com, self.scale);
+        }
 
         // print percentile * 2
         // log(&format!("Width (AU): {}", percentile * 2.0));

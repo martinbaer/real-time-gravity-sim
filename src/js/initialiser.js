@@ -1,4 +1,4 @@
-import init, { create_bodies, render_bodies, on_click, off_click, set_dt, set_gravity, set_spawn_radius, set_spawn_speed } from './space_clicker.js';
+import init, { create_bodies, render_bodies, on_click, off_click, set_dt, set_gravity, set_spawn_radius, set_spawn_speed, update_mouse_position } from './space_clicker.js';
 
 const NUM_STARTING_BODIES = 10;
 
@@ -131,6 +131,12 @@ async function run() {
 		} else {
 			off_click(e.touches[0].clientX, e.touches[0].clientY);
 		}
+	});
+
+
+	// Add mouse move listener
+	document.addEventListener("mousemove", function (event) {
+		update_mouse_position(event.clientX, event.clientY);
 	});
 
 	// Start the animation loop
