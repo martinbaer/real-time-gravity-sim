@@ -1,6 +1,6 @@
 // For the Barnes-Hut acceleration calculation
 pub const SOFTENING: f64 = 1.0;
-pub const THETA: f64 = 0.5; // Used in acceleration calculation, the smaller the more accurate
+pub const THETA: f64 = 0.9; // Used in acceleration calculation, the smaller the more accurate
 pub const BODIES_PER_SPAWN: usize = 2; // The number of bodies to spawn at a time
 pub const START_BOX_SIZE: f64 = 50.0; // The size of the box that contains all the bodies at the start
 
