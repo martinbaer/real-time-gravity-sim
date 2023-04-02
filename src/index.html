@@ -24,20 +24,25 @@
 			<button class="parameter-adjust-button" id="decrease-gravity">-</button>
 		</div>
 		<div>
-			<label>Spawn Speed = </label>
+			<label>New Mass Velocity = </label>
 			<span class="parameter-input" id="spawn-speed" contenteditable="true">100</span>
 			<button class="parameter-adjust-button" id="increase-spawn-speed">+</button>
 			<button class="parameter-adjust-button" id="decrease-spawn-speed">-</button>
 		</div>
 		<div>
-			<label>Spawn Radius = </label>
+			<label>New Mass Spawn Radius = </label>
 			<span class="parameter-input" id="spawn-radius" contenteditable="true">100</span>
 			<button class="parameter-adjust-button" id="increase-spawn-radius">+</button>
 			<button class="parameter-adjust-button" id="decrease-spawn-radius">-</button>
 		</div>
 	</div>
 
-	<script src="draw_body.js"></script>
+	<div id="sim-info">
+		<label>Number of Bodies = </label>
+		<div id="num-bodies">3</div>
+	</div>
+
+	<script src="draw.js"></script>
 </body>
 
 </html>

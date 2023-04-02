@@ -6,14 +6,16 @@ use crate::{
     constants::{
         BODIES_PER_SPAWN, SPAWN_BODY_COLOR, SPAWN_BODY_DRAW_SIZE, SPAWN_BODY_DRAW_SIZE_MOBILE,
     },
-    draw_body,
+    draw_arrow, draw_body, increase_num_bodies,
 };
 
 use super::bh_tree::Tree;
 
 pub struct Spawner {
-    mouse_x: f64,
-    mouse_y: f64,
+    pub spawning_mouse_x: f64,
+    pub spawning_mouse_y: f64,
+    pub current_mouse_x: f64,
+    pub current_mouse_y: f64,
     spawned_x: Vec<f64>,
     spawned_y: Vec<f64>,
     is_mobile: bool,
@@ -27,8 +29,10 @@ pub struct Spawner {
 impl Spawner {
     pub fn new_empty() -> Spawner {
         Spawner {
-            mouse_x: 0.0,
-            mouse_y: 0.0,
+            spawning_mouse_x: 0.0,
+            spawning_mouse_y: 0.0,
+            current_mouse_x: 0.0,
+            current_mouse_y: 0.0,
             spawned_x: Vec::new(),
             spawned_y: Vec::new(),
             is_mobile: false,
@@ -50,8 +54,8 @@ impl Spawner {
     // spawn bodies randomly around the click position
     pub fn spawn_body(&mut self, com: (f64, f64), scale: f64) {
         // convert click position from canvas to AU
-        let x: f64 = (self.mouse_x - self.canvas_half_width) / scale + com.0;
-        let y: f64 = (self.mouse_y - self.canvas_half_height) / scale + com.1;
+        let x: f64 = (self.spawning_mouse_x - self.canvas_half_width) / scale + com.0;
+        let y: f64 = (self.spawning_mouse_y - self.canvas_half_height) / scale + com.1;
         for _ in 0..BODIES_PER_SPAWN {
             // add a random offset to the click position
             let offset: f64 = self.spawn_radius;
@@ -62,10 +66,7 @@ impl Spawner {
             self.spawned_x.push(click_x_au);
             self.spawned_y.push(click_y_au);
         }
-    }
-    pub fn update_mouse_position(&mut self, x: f64, y: f64) {
-        self.mouse_x = x;
-        self.mouse_y = y;
+        increase_num_bodies(BODIES_PER_SPAWN);
     }
     pub fn add_spawned_bodies_to_simulation(
         &mut self,
@@ -82,8 +83,8 @@ impl Spawner {
         sim_bh_tree: &mut Tree,
     ) {
         // calculate the velocity of the spawned bodies
-        let dx: f64 = mouse_x - self.mouse_x;
-        let dy: f64 = mouse_y - self.mouse_y;
+        let dx: f64 = mouse_x - self.spawning_mouse_x;
+        let dy: f64 = mouse_y - self.spawning_mouse_y;
         let vx: f64 = dx * self.spawn_speed;
         let vy: f64 = dy * self.spawn_speed;
 
@@ -122,5 +123,14 @@ impl Spawner {
                 draw_body(canvas_x, canvas_y, color, body_draw_size);
             }
         }
+        // draw an arrow from the spawning mouse position to the current mouse position
+        const ARROW_COLOR: &str = "red";
+        draw_arrow(
+            self.spawning_mouse_x,
+            self.spawning_mouse_y,
+            self.current_mouse_x,
+            self.current_mouse_y,
+            ARROW_COLOR,
+        );
     }
 }
