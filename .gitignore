@@ -11,3 +11,5 @@ localhost.pem
 
 web
 git.sh
+
+.DS_Store
