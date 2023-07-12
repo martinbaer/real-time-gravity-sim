@@ -16,7 +16,28 @@ const SPAWN_SPEED_MULTIPLIER = 0.01;
 const BUTTON_SCALE_FACTOR = 1.5;
 
 async function run() {
+	let begun = false;
+
+	document.getElementById("got-it").addEventListener("click", function (e) {
+		document.getElementById("instructions").remove();
+		console.log("clicked");
+		begun = true;
+	});
+	const waitForGotIt = async () => {
+		return new Promise((resolve, reject) => {
+			const interval = setInterval(() => {
+				if (begun) {
+					clearInterval(interval);
+					resolve();
+				}
+			}, 1);
+		});
+	};
+	await waitForGotIt();
+	console.log("starting to initialise");
+
 	await init();
+	console.log("initialised");
 
 	// Gather info needed in the wasm module
 	canvas.width = window.innerWidth;

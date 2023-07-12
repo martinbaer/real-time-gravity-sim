@@ -4,6 +4,32 @@ body {
 	padding: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
 		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	color: white;
+}
+
+#instructions {
+	position: absolute;
+	top: 2rem;
+	width: 80%;
+	height: calc(100% - 4rem);
+	margin: 0 10%;
+	/* center text */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: lightgray;
+}
+
+#instructions p {
+	/* cenre */
+	text-align: center;
+}
+
+#instructions button {
+	color: white;
+	width: auto;
+	margin-top: 30px;
 }
 
 #canvas {
@@ -14,17 +40,23 @@ body {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 2rem;
+	/* height: 2rem; */
 	background-color: rgba(52, 52, 52, 0.5);
 	z-index: 1000;
-	color: white;
 	display: grid;
 	/* 4 even columns */
 	grid-template-columns: repeat(4, 1fr);
 
 	/* padding but without increasing width */
 	box-sizing: border-box;
-	padding: 0.1rem 1rem;
+	padding: 0.1rem 1rem 0.36rem 1rem;
+	/* centre content */
+}
+/* for mobile */
+@media (max-width: 1150px) {
+	#parameters {
+		grid-template-columns: repeat(1, 1fr);
+	}
 }
 
 span {
@@ -79,7 +111,6 @@ input[type="number"] {
 #sim-info {
 	/* transparent div at bottom of screen, but not extending the screen */
 	position: absolute;
-	color: white;
 	bottom: 0;
 	left: 0;
 	width: 100%;
@@ -87,25 +118,25 @@ input[type="number"] {
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 1000;
 	box-sizing: border-box;
-	margin: 0.3rem 0;
 	padding: 0 1rem;
 
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-end;
+	margin-bottom: 10px;
 }
 
-#num-bodies {
+/* #num-bodies {
 	padding-right: 0;
 	margin-right: 0;
-}
+} */
 
 #sim-info label {
 	/* padding-right: 0.25rem; */
 	height: 1rem;
 }
 
-#num-bodies {
+/* #num-bodies {
 	height: 1rem;
-}
+} */
